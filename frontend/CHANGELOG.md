@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.2](https://github.com/msilabben/cnapp-module-2-application-christopherl/compare/frontend@v1.4.1...frontend@v1.4.2) (2026-08-29)
+
+
+### Bug Fixes
+
+* revert images for task ([8aad050](https://github.com/msilabben/cnapp-module-2-application-christopherl/commit/8aad0509be4b6ee3867b338a5a345ba6d0c470c0))
+* update api response ([f501673](https://github.com/msilabben/cnapp-module-2-application-christopherl/commit/f5016731156bddaacfc71bce7bf555ce83bd93d6))
+* update api response ([fdbc8a8](https://github.com/msilabben/cnapp-module-2-application-christopherl/commit/fdbc8a85d6227593132b3740a406de84f422e4b7))
+
 ## [1.4.1](https://github.com/msilabben/cnapp-module-2-application/compare/frontend@v1.4.0...frontend@v1.4.1) (2026-06-15)
 
 
