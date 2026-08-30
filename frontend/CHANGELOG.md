@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/msilabben/cnapp-module-2-application-christopherl/compare/frontend@v1.4.2...frontend@v1.4.3) (2026-08-30)
+
+
+### Bug Fixes
+
+* trigger build ([e363266](https://github.com/msilabben/cnapp-module-2-application-christopherl/commit/e3632661f8470420d23fb9afe7216aa829d574e4))
+
 ## [1.4.2](https://github.com/msilabben/cnapp-module-2-application-christopherl/compare/frontend@v1.4.1...frontend@v1.4.2) (2026-08-29)
 
 
