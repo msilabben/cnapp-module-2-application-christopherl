@@ -1,66 +1,71 @@
 import { useEffect, useState } from 'react'
+import { navigation, PageId, wedding } from './config'
+import { Icon, IconName } from './icons'
+import { DressCodePage, RsvpPage, SchedulePage, VenuePage, WelcomePage, WishlistPage } from './pages'
 
-type ApiResponse = {
-  message: string
-  deployment: string
+const pageIcons: Record<PageId, IconName> = {
+  velkommen: 'home', program: 'calendar', sted: 'pin', antrekk: 'hanger', svar: 'mail', onskeliste: 'gift',
+}
+
+function routeFromHash(): PageId {
+  const route = window.location.hash.replace('#/', '') as PageId
+  return navigation.some(item => item.id === route) ? route : 'velkommen'
 }
 
 export default function App() {
-  const [message, setMessage] = useState('Loading...')
-  const [deployment, setDeployment] = useState('')
-  const [error, setError] = useState('')
+  const [page, setPage] = useState<PageId>(routeFromHash)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
-    fetch(`/api/message`)
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`API request failed, statuscode: ${res.status}`)
-        }
-        return (await res.json()) as ApiResponse
-      })
-      .then((data) => {
-        setMessage(data.message)
-        setDeployment(data.deployment)
-      })
-      .catch((err: Error) => {
-        setError(err.message)
-      })
+    const updateRoute = () => {
+      setPage(routeFromHash())
+      setMenuOpen(false)
+      window.scrollTo({ top: 0, behavior: 'auto' })
+    }
+    window.addEventListener('hashchange', updateRoute)
+    return () => window.removeEventListener('hashchange', updateRoute)
   }, [])
 
-  return (
-    <main className="container">
-      <div className="card">
-        <p className="eyebrow">Codespaces starter</p>
-        <h1>React + FastAPI</h1>
-        <p className="lead">A tiny frontend and backend pair that runs cleanly in containers.</p>
+  useEffect(() => {
+    document.body.classList.toggle('menu-is-open', menuOpen)
+    return () => document.body.classList.remove('menu-is-open')
+  }, [menuOpen])
 
-        <div className="panel">
-          <h2>Backend response</h2>
-          {error ? (
-            <p className="error">Error: {error}</p>
-          ) : (
-            <>
-              <p><strong>Message:</strong> {message}</p>
-              <p><strong>Note:</strong> {deployment}</p>
-            </>
-          )}
-        </div>
+  function navigate(nextPage: PageId) {
+    if (nextPage === page) {
+      setMenuOpen(false)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    window.location.hash = `/${nextPage}`
+  }
 
-        <div className="grid">
-          <div className="mini-card">
-            <h3>Frontend</h3>
-            <p>Vite + React + TypeScript</p>
-          </div>
-          <div className="mini-card">
-            <h3>Backend</h3>
-            <p>FastAPI + Uvicorn</p>
-          </div>
-          <div className="mini-card">
-            <h3>Deploy</h3>
-            <p>Each ships with its own Dockerfile</p>
-          </div>
-        </div>
-      </div>
-    </main>
-  )
+  const content = {
+    velkommen: <WelcomePage navigate={navigate} />,
+    program: <SchedulePage />,
+    sted: <VenuePage />,
+    antrekk: <DressCodePage />,
+    svar: <RsvpPage />,
+    onskeliste: <WishlistPage />,
+  }[page]
+
+  return <div className="site-shell">
+    <header className={`site-header ${page === 'velkommen' ? 'over-hero' : ''}`}>
+      <button className="menu-button" onClick={() => setMenuOpen(true)} aria-label="Åpne meny" aria-expanded={menuOpen}><Icon name="menu" /></button>
+      <button className="wordmark" onClick={() => navigate('velkommen')}>{wedding.couple}</button>
+      <button className="rsvp-link" onClick={() => navigate('svar')}>Svar</button>
+    </header>
+
+    <div className={`menu-overlay ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
+      <button className="menu-backdrop" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1} aria-label="Lukk meny" />
+      <nav className="menu-panel" aria-label="Hovedmeny">
+        <div className="menu-top"><span>Meny</span><button onClick={() => setMenuOpen(false)} aria-label="Lukk meny"><Icon name="close" /></button></div>
+        <p className="menu-couple">{wedding.couple}</p><p className="menu-date">{wedding.dateLabel}</p>
+        <div className="menu-items">{navigation.map(item => <button key={item.id} className={page === item.id ? 'active' : ''} onClick={() => navigate(item.id)}><Icon name={pageIcons[item.id]} /><span>{item.label}</span><Icon name="arrow" /></button>)}</div>
+      </nav>
+    </div>
+
+    <main>{content}</main>
+    {page !== 'velkommen' && <footer><span>{wedding.couple}</span><span>·</span><span>{wedding.dateLabel}</span></footer>}
+  </div>
 }

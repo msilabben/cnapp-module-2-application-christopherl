@@ -1,11 +1,14 @@
-from importlib.metadata import version, PackageNotFoundError
+import os
+from importlib.metadata import PackageNotFoundError, version
+from pathlib import Path
+from uuid import uuid4
 
-from fastapi import FastAPI
+from fastapi import Cookie, FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.rsvp import RsvpSubmission, create_rsvp_store, get_session_secret, sign_session, verify_session
 
-import os
-from pathlib import Path
+RSVP_COOKIE = "wedding_rsvp_session"
 
 def read_secret(name: str) -> str:
     secrets_dir = Path(os.environ.get("SECRETS_DIR", "/mnt/secrets-store"))
@@ -24,7 +27,9 @@ def get_version() -> str:
         return "0.0.0-dev"
 
 def create_app():
-    app = FastAPI(title="Simple FastAPI API", version=get_version())
+    app = FastAPI(title="Christopher og Rikke – bryllups-API", version=get_version())
+    rsvp_store = create_rsvp_store()
+    session_secret = get_session_secret()
 
     app.add_middleware(
         CORSMiddleware,
@@ -54,5 +59,34 @@ def create_app():
             "message": "Hello from FastAPI Backend!",
             "deployment": "This is a container-friendly backend."
         }
+
+    @app.get("/api/rsvp", response_model=RsvpSubmission)
+    def get_rsvp(wedding_rsvp_session: str | None = Cookie(default=None)):
+        session_id = verify_session(wedding_rsvp_session, session_secret)
+        if not session_id:
+            raise HTTPException(status_code=404, detail="No RSVP response was found")
+        submission = rsvp_store.get(session_id)
+        if not submission:
+            raise HTTPException(status_code=404, detail="No RSVP response was found")
+        return submission
+
+    @app.post("/api/rsvp", response_model=RsvpSubmission)
+    def save_rsvp(
+        submission: RsvpSubmission,
+        response: Response,
+        wedding_rsvp_session: str | None = Cookie(default=None),
+    ):
+        session_id = verify_session(wedding_rsvp_session, session_secret) or uuid4().hex
+        rsvp_store.save(session_id, submission)
+        response.set_cookie(
+            key=RSVP_COOKIE,
+            value=sign_session(session_id, session_secret),
+            max_age=60 * 60 * 24 * 540,
+            httponly=True,
+            secure=os.environ.get("APP_ENV", "development") != "development",
+            samesite="lax",
+            path="/",
+        )
+        return submission
 
     return app
