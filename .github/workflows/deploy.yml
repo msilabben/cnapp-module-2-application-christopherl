@@ -43,7 +43,7 @@ jobs:
       ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
-      AKS_CLUSTER: ${{ vars.AKS_CLUSTER }}
+      AKS_CLUSTER_NAME: ${{ vars.AKS_CLUSTER_NAME }}
       ACR_NAME: ${{ vars.ACR_NAME }}
       FRONTEND_VERSION: ${{ inputs.frontend_image_version }}
       BACKEND_VERSION: ${{ inputs.backend_image_version }}
@@ -65,32 +65,10 @@ jobs:
 
       - name: Set AKS context
         run: |
-          set -euo pipefail
-
-          echo "Azure CLI:"
-          az version
-
-          echo "Extensions:"
-          az extension list -o table
-
-          echo "Current Azure account:"
-          az account show \
-            --query '{subscription:id,tenant:tenantId,name:name}' \
-            -o yaml
-
-          echo "AKS resource:"
-          az aks show \
-            --resource-group "${RESOURCE_GROUP}" \
-            --name "${AKS_CLUSTER}" \
-            --query '{id:id,name:name,type:type,location:location}' \
-            -o yaml
-
-          echo "Getting credentials:"
           az aks get-credentials \
             --resource-group "${RESOURCE_GROUP}" \
             --name "${AKS_CLUSTER}" \
-            --overwrite-existing \
-            --debug
+            --overwrite-existing
 
       - name: Deploy cnapp to AKS with Azure Key Vault mounted secrets
         shell: bash
