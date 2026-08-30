@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.0](https://github.com/msilabben/cnapp-module-2-application-christopherl/compare/backend@v0.5.3...backend@v0.6.0) (2026-08-30)
+
+
+### Features
+
+* mount RSVP secrets from Key Vault ([c36d7ed](https://github.com/msilabben/cnapp-module-2-application-christopherl/commit/c36d7ed0eaee58d336e097ad1436872fc1c9ede8))
+* redesign app as wedding guest site ([49d2c4c](https://github.com/msilabben/cnapp-module-2-application-christopherl/commit/49d2c4c1329377b4eb3592337fab98aad44cf62d))
+
 ## [0.5.3](https://github.com/msilabben/cnapp-module-2-application-christopherl/compare/backend@v0.5.2...backend@v0.5.3) (2026-08-30)
 
 
