@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/msilabben/cnapp-module-2-application-christopherl/compare/backend@v0.5.2...backend@v0.5.3) (2026-08-30)
+
+
+### Bug Fixes
+
+* trigger build ([0b4cbd8](https://github.com/msilabben/cnapp-module-2-application-christopherl/commit/0b4cbd83c08f35be44f380ad1c2b42b5e0547a37))
+
 ## [0.5.2](https://github.com/msilabben/cnapp-module-2-application-christopherl/compare/backend@v0.5.1...backend@v0.5.2) (2026-08-29)
 
 
