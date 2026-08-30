@@ -55,7 +55,7 @@ jobs:
 
   backend-dev:
     if: ${{ startsWith(github.ref, 'refs/tags/backend@v') }}
-    uses: ./.github/workflows/build-and-push-ghcr.yml
+    uses: ./.github/workflows/build-and-push-azure.yml
     with:
       image-name: backend
       context: backend
@@ -66,7 +66,7 @@ jobs:
   backend-prod:
     needs: backend-dev
     if: ${{ startsWith(github.ref, 'refs/tags/backend@v') }}
-    uses: ./.github/workflows/build-and-push-ghcr.yml
+    uses: ./.github/workflows/build-and-push-azure.yml
     with:
       image-name: backend
       context: backend
@@ -76,7 +76,7 @@ jobs:
 
   frontend-dev:
     if: ${{ startsWith(github.ref, 'refs/tags/frontend@v') }}
-    uses: ./.github/workflows/build-and-push-ghcr.yml
+    uses: ./.github/workflows/build-and-push-azure.yml
     with:
       image-name: frontend
       context: frontend
@@ -87,7 +87,7 @@ jobs:
   frontend-prod:
     needs: frontend-dev
     if: ${{ startsWith(github.ref, 'refs/tags/frontend@v') }}
-    uses: ./.github/workflows/build-and-push-ghcr.yml
+    uses: ./.github/workflows/build-and-push-azure.yml
     with:
       image-name: frontend
       context: frontend
