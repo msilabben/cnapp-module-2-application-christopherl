@@ -88,8 +88,8 @@ jobs:
             envsubst < "$manifest" | kubectl apply -f -
           done
       
-          kubectl rollout status deployment/backend --namespace "$NAMESPACE" --timeout=180s
-          kubectl rollout status deployment/frontend --namespace "$NAMESPACE" --timeout=180s
+          kubectl rollout status deployment/backend --namespace "$NAMESPACE" --timeout=300s
+          kubectl rollout status deployment/frontend --namespace "$NAMESPACE" --timeout=300s
 
       - name: Get App gw ID
         run: |
