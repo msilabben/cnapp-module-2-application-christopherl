@@ -67,7 +67,7 @@ jobs:
         run: |
           az aks get-credentials \
             --resource-group "${RESOURCE_GROUP}" \
-            --name "${AKS_CLUSTER}" \
+            --name "${AKS_CLUSTER_NAME}" \
             --overwrite-existing
 
       - name: Deploy cnapp to AKS with Azure Key Vault mounted secrets
