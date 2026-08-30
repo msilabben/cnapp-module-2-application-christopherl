@@ -10,3 +10,11 @@ RSVP-svar blir lagret i minnet under lokal utvikling. Følg disse trinnene for �
 6. Sett `GOOGLE_SHEETS_WEB_APP_URL`, `GOOGLE_SHEETS_SHARED_SECRET` og `RSVP_SESSION_SECRET` i backend-miljøet.
 
 Bruk en lang, tilfeldig verdi for begge hemmelighetene. Ikke legg verdiene i Git.
+
+I Azure bruker Kubernetes disse Key Vault-navnene:
+
+- `google-sheets-web-app-url`
+- `google-sheets-shared-secret`
+- `rsvp-session-secret`
+
+De blir montert som skrivebeskyttede filer i backend-containeren. Frontend-containeren får ikke tilgang til dem.

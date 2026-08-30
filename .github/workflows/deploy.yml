@@ -75,6 +75,9 @@ jobs:
         env:
           BACKEND_SECRET_NAME: backend-secret
           FRONTEND_SECRET_NAME: frontend-secret
+          GOOGLE_SHEETS_WEB_APP_URL_SECRET_NAME: google-sheets-web-app-url
+          GOOGLE_SHEETS_SHARED_SECRET_NAME: google-sheets-shared-secret
+          RSVP_SESSION_SECRET_NAME: rsvp-session-secret
 
         run: |
           set -euo pipefail

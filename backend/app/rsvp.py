@@ -76,16 +76,29 @@ class GoogleSheetsRsvpStore(RsvpStore):
             raise RuntimeError("Google Sheets did not accept the RSVP response")
 
 
+def get_config_value(environment_name: str, secret_filename: str) -> str:
+    configured_value = os.environ.get(environment_name, "").strip()
+    if configured_value:
+        return configured_value
+
+    secrets_dir = Path(os.environ.get("SECRETS_DIR", "/mnt/secrets-store"))
+    secret_file = secrets_dir / secret_filename
+    if secret_file.exists():
+        return secret_file.read_text().strip()
+
+    return ""
+
+
 def create_rsvp_store() -> RsvpStore:
-    endpoint = os.environ.get("GOOGLE_SHEETS_WEB_APP_URL", "").strip()
-    shared_secret = os.environ.get("GOOGLE_SHEETS_SHARED_SECRET", "").strip()
+    endpoint = get_config_value("GOOGLE_SHEETS_WEB_APP_URL", "google-sheets-web-app-url")
+    shared_secret = get_config_value("GOOGLE_SHEETS_SHARED_SECRET", "google-sheets-shared-secret")
     if endpoint and shared_secret:
         return GoogleSheetsRsvpStore(endpoint, shared_secret)
     return MemoryRsvpStore()
 
 
 def get_session_secret() -> bytes:
-    configured_secret = os.environ.get("RSVP_SESSION_SECRET", "").strip()
+    configured_secret = get_config_value("RSVP_SESSION_SECRET", "rsvp-session-secret")
     if configured_secret:
         return configured_secret.encode()
 

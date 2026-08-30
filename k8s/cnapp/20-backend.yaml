@@ -37,7 +37,7 @@ spec:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: cnapp-keyvault-secrets
+              secretProviderClass: cnapp-backend-keyvault-secrets
 ---
 apiVersion: v1
 kind: Service
